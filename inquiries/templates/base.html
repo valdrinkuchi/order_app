@@ -1,0 +1,135 @@
+{% load static %}
+<html>
+    <head>
+        <title>Order Management</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+      </head>
+
+    
+
+    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/forms.css' %}">
+    <link rel="stylesheet" href="{% static '/css/select2.css' %}">
+    <link rel="stylesheet" href="{% static '/css/download.css' %}">
+    <link rel="stylesheet" href="{% static '/css/navbarlinks.css' %}">
+    <!-- <link rel="stylesheet" href="{% static '/css/tables.css' %}"> -->
+    
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet"> <!-- for live demo page -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script> 
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link" href="{% url 'index' %}">
+                Home
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Main
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item"  href="{% url 'display_orders' %}">Orders</a>
+                <a class="dropdown-item"  href="{% url 'display_production' %}">Productions</a>
+                <a class="dropdown-item"  href="{% url 'display_customers' %}">Customers</a>
+                <a class="dropdown-item"  href="{% url 'display_brands' %}">Brands</a>
+                <a class="dropdown-item"  href="{% url 'display_producers' %}">Producers</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Accounting
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'display_invoices' %}">Out/Invoices</a>
+                    <a class="dropdown-item" href="{% url 'incoming_invoices' %}">In/Invoices</a>
+                    <a class="dropdown-item" href="{% url 'display_payments' %}">Payments</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Reports
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'select_customer' %}">Customer</a>
+                    <a class="dropdown-item" href="{% url 'select_producer' %}">Producer</a>
+                </div>
+              </li>
+          </ul> 
+          <form class="form-inline my-2 my-lg-2 search-bar" method="GET" action="{% url 'order_lookup' %}">
+              <input
+                  class="form-control mr-sm-2 input-search"
+                  placeholder="Search Order"
+                  aria-label="Search"
+                  name='order_search'
+                  value="{{request.GET.order_search}}">
+              <button class="navigation-search-base" href="#" type="submit"><i class="fa fa-search" style="font-size:18px"></i></button>
+           
+              {% if user.is_authenticated %}
+                <a class="navigation-logout" href="{% url 'logout' %}" style="font-size:12px">Logout</a>
+                <a class="navigation-profile" href="{% url 'profile' %}" style="font-size:12px">{{user}}
+                  <i class="fa fa-user-circle"></i>
+                </a>
+              {% else %}
+                <a class="navigation-login" href="{% url 'login' %}" style="font-size:12px">Login</a>
+                <a class="navigation-user" href="{% url 'register' %}" style="font-size:12px">+
+                  <i class="fa fa-user-circle"></i>
+                </a>
+              {% endif %}
+          </form>
+        </div>
+    </nav>
+  <div class="container">
+
+    {% block body %}
+
+
+    {% endblock%}
+
+  </div>
+</body>
+
+</html>
+<style>
+  body{
+    /* padding-left: calc(100vw - 100%); */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-right: calc(-1 * (100vw - 100%));
+
+  }
+@media (max-width: 779px) {
+  .form-control.mr-sm-2.input-search{
+      margin-bottom:10px;
+}}
+.container{
+  min-width: 360px;
+  max-width: 1200px; 
+  }
+  .select2-search__field{
+    display: none !important;
+    }
+</style>

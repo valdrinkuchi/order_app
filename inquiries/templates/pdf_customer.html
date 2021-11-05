@@ -1,0 +1,95 @@
+<h1>The results table for customer:{{name}} for year {{year}}</h1>
+<style>
+  body {
+  font: normal small/1 sans-serif;
+}
+table {
+  border-collapse: collapse;
+  width: 150px;
+  height: 30px;
+}
+th, td {
+  padding: 1px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+tbody tr:nth-child(odd) {
+  background: #eee;
+}
+</style>   
+<div>
+    <table class="table table-bordered">
+    <meta charset="UTF-8">
+      <thread>
+          <tr>
+          <th>Customer</th>
+          <th>Order Number</th>
+          <th>Sale Netto</th>
+          <th>Sale VAT</th>
+          <th>Sale Gross</th>
+          <th>Pcs Difference</th>
+          <th>Late Delivery</th>
+          <th>Profit</th>
+          <th>Year</th>
+          </tr>
+      </thread>
+      <tbody>
+          {% for calculations in calculations %}
+              <tr>
+                  <td nowrap>{{calculations.order.customer}}</td>
+                  <td nowrap>{{calculations.order}}</td>
+                  <td nowrap>{{calculations.sale_neto}} €</td>
+                  <td nowrap>{{calculations.sale_vat}} €</td>
+                  <td nowrap>{{calculations.sale_gross}} €</td>
+                  <td nowrap><center>{{calculations.amount_difference}}</center></td>
+                  <td nowrap><center>{{calculations.days_late}} Days</center></td>
+                  <td nowrap>{{calculations.profit}} €</td>
+                  <td nowrap>{{calculations.production.load_date.year}}</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <h1 class="border-bottom mb-4"> The Overall Report</h1>
+    <table class="table table-bordered">
+      <meta charset="UTF-8">
+        <thread>
+            <tr>
+            <th>Total</th>
+            <th>Sale Netto</th>
+            <th>Sale VAT</th>
+            <th>Sale Gross</th>
+            <th>Avge Pcs Difference</th>
+            <th>Avg Late Delivery</th>
+            <th>Sum Profit</th>
+            </tr>
+        </thread>
+        <tbody>
+                <tr>
+                    <td nowrap>Year: {{ year }}</td>
+                    <td nowrap>{{sum_neto}} €</td>
+                    <td nowrap>{{sum_vat}} €</td>
+                    <td nowrap>{{sum_gross}} €</td>
+                    <td nowrap><center>{{avg_amount_difference}}</center></td>
+                    <td nowrap><center>{{avg_days_late}} Days</center></td>
+                    <td nowrap>{{sum_profit}} €</td>
+                </tr>
+        </tbody>
+      </table>
+      
+      <table class="table table-bordered">
+        <meta charset="UTF-8">
+          <thread>
+            <tr>
+              <th>Total Payment</th>
+            </tr>
+          </thread>
+          <tbody>
+                <tr>
+                  <td nowrap>{{ sum_payments }} €</td>
+                </tr>
+          </tbody>
+      </table>
+      <h3>Total debt is: {{debt}} €</h3>
+</div>

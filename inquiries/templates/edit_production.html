@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block body %}
+<br>
+<br>
+<div class="shadow p-3 mb-5 bg-white rounded">
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
+    <div class="row">
+      &nbsp &nbsp<a href="{% url 'display_production' %}" class="navigation" role="button" style="font-size:12px">Back</a>
+    </div>
+  <br>
+    <form class="text-center" method="POST">
+        {% csrf_token %}
+        <div class="shadow p-3 mb-5 bg-white rounded">
+          <h5>Editing {{Model}}</h5>
+        </div>
+        <div class="shadow p-3 mb-5 bg-white rounded">
+                {% for field in form %}
+                  <div class="form-group row">
+                      <label for="id_{{field.name}}" class="col-3 col-form-label">{{field.label}}</label>
+                      <div class="col-6">
+                        {{field}}
+                      </div>
+                  </div>
+                {% endfor %}
+
+            <div class="form-group row">
+              <div class="offset-sm-2 col-sm-6">
+                <button type="submit" class="navigation-create" name="button">Save</button>
+                <a href="{% url 'delete_production' Model.pk %}" class="delete-druck">Delete</a>
+              </div>
+            </div>
+    </form>
+  </div>
+</div>
+{% endblock%}

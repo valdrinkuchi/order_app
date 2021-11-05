@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+<br>
+<br>
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
+<div class="shadow p-3 mb-5 bg-white rounded">
+    <div class="row">
+      <a href="{% url 'display_payments' %}" class="navigation" role="button" style="font-size:12px">Back</a>
+    </div>
+  <br>
+    <form class="text-center" method="POST">
+        {% csrf_token %}
+        <div class="shadow p-3 mb-5 bg-white rounded">
+          <h5>Adding Payment</h5>
+        </div>
+        <div class="shadow p-3 mb-5 bg-white rounded">
+            {% for field in form %}
+            <div class="form-group row">
+                <label for="id_{{field.name}}" class="col-3 col-form-label">{{field.label}}</label>
+                <div class="col-6">
+                  {{ field}}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="form-group row">
+              <label for="producers" class="col-3 col-form-label">Producer</label>
+                <div class="col-6">
+                  <select id="producer-list" class="form-control" name="producer">
+                    {% for option in producers_list %}
+                      <option value="" disabled selected hidden>Select Producer</option>
+                      <option value="{{ option.pk }}">{{ option }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-1">
+                  <button id="reset_options_producer" class="btn btn-danger btn-circle" name="button">X</button>&nbsp
+                </div>
+            </div>
+            <div class="form-group row">
+              <label for="customers" class="col-3 col-form-label">Customer</label>
+                <div class="col-6">
+                  <select id="customer-list" class="form-control" name="customer">
+                    {% for option in customers_list %}
+                      <option value="" disabled selected hidden>Select Customer</option>
+                      <option value="{{ option.pk }}">{{ option }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-1">
+                  <button id="reset_options_customer" class="btn btn-danger btn-circle" name="button">X</button>&nbsp
+                </div>
+            </div>
+            <div class="form-group row in_invoices">
+                <label for="in_invoices[]" class="col-3 col-form-label">Incoming Invoices </label>
+                  <div class="col-6">
+                    <select id="in_invoices-list-select2" class="form-control in_invoice" name="in_invoices[]" multiple="multiple">
+                      {% for option in out_invoices %}
+                        <option value="{{ option.pk }}">{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+            </div>
+            <div class="form-group row out_invoices">
+                <label for="out_invoices[]" class="col-3 col-form-label">Outgoing Invoices </label>
+                  <div class="col-6" role="alert">
+                    <select id="out_invoices-list-select2" class="form-control out_invoice" name="out_invoices[]" multiple="multiple">
+                      {% for option in in_invoices %}
+                        <option value="{{ option.pk }}">{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+            </div>
+            <div class="form-group row">
+              <div class="offset-sm-2 col-sm-6">
+                <button type="submit" class="navigation-create" name="button">Save</button>
+              </div>
+            </div>
+    </form>
+  </div>
+</div>
+  <script>
+    $(document).ready(function(){
+      $("#add_item").click(function(){
+        $('#delete').show();
+      });
+    });
+  $(document).ready(function() {
+    $('#id_payment_type.form-control').change(function(){
+      const type = $(this).children("option:selected").val();
+      if (type == 'In'){
+        $('#producer-list').css('opacity', '0.6');
+        $('#producer-list').css("pointer-events","none");
+        $('#customer-list').css('opacity', '1');
+        $('#customer-list').css("pointer-events","auto");
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '0.6');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","none");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        }
+      else{
+        
+        $('#producer-list').css('opacity', '1');
+        $('#producer-list').css("pointer-events","auto");
+        $('#customer-list').css('opacity', '0.6');
+        $('#customer-list').css("pointer-events","none");
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '0.6');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","none");
+        }
+    });
+  });
+    $(document).ready(function() {
+        $('#in_invoices-list-select2').select2({
+          class: "form-control",
+          theme: 'bootstrap4',
+        });
+        $('#out_invoices-list-select2').select2({
+          class: "form-control",
+          theme: 'bootstrap4',
+        });
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        const type = $('#id_payment_type.form-control').children("option:selected").val();
+      if (type == 'In'){
+        $('#producer-list').css('opacity', '0.6');
+        $('#producer-list').css("pointer-events","none");
+        $('#customer-list').css('opacity', '1');
+        $('#customer-list').css("pointer-events","auto");
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '0.6');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","none");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+      }
+      else{
+        $('#producer-list').css('opacity', '1');
+        $('#producer-list').css("pointer-events","auto");
+        $('#customer-list').css('opacity', '0.6');
+        $('#customer-list').css("pointer-events","none");
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '0.6');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","none");
+      }
+      });
+      $('#customer-list').change(function(){
+      $('#producer-list').css('opacity', '0.6');
+      $('#producer-list').css("pointer-events","none");
+      $('#reset_options_customer').show();
+    });
+    $('#producer-list').change(function(){
+      $('#customer-list').css('opacity', '0.6');
+      $('#customer-list').css("pointer-events","none");
+      $('#reset_options_producer').show();
+    });
+    $('#reset_options_customer').click(function(){
+      event.preventDefault()
+      $('#customer-list').val('');
+      $('#customer-list').css('opacity', '1');
+      $('#customer-list').css("pointer-events","auto");
+      $('#reset_options_customer').hide();
+    });
+    $('#reset_options_producer').click(function(){
+      event.preventDefault()
+      $('#producer-list').val('');
+      $('#producer-list').css('opacity', '1');
+      $('#producer-list').css("pointer-events","auto");
+      $('#reset_options_producer').hide();
+    });
+    $(document).ready(function() {
+      $('#reset_options_producer').hide();
+      $('#reset_options_customer').hide();
+    });
+    $(document).ready(function() {
+      const producer = $('#producer-list').children("option:selected").val();
+      if (producer !== ''){
+        $('#reset_options_producer').show();
+      }
+      if (producer == null){
+        $('#reset_options_producer').hide();
+      }
+    });
+    $(document).ready(function() {
+      const customer = $('#customer-list').children("option:selected").val();
+      if (customer !== ''){
+        $('#reset_options_customer').show();
+      }
+      if (customer == null){
+        $('#reset_options_customer').hide();
+      }
+    });
+  </script>
+{% endblock%}

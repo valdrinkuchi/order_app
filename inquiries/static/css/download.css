@@ -1,0 +1,53 @@
+
+  .navigation-download {
+    margin-left: 15px;
+    display: inline-block;
+    padding: .35rem 0.50rem;
+    border-radius: 10rem;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: .15rem;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border: none;
+  }
+  
+  .navigation-download:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0cf;
+    border-radius: 10rem;
+    z-index: -2;
+  }
+  
+  .navigation-download:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: #b85fce;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    border-radius: 10rem;
+    z-index: -1;
+  }
+  
+  .navigation-download:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .navigation-download:hover:before {
+    width: 100%;
+  }

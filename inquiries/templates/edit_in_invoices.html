@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block body %}
+<br>
+<br>
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
+<div class="shadow p-3 mb-5 bg-white rounded">
+    <div class="row">
+      &nbsp &nbsp<a href="{% url 'incoming_invoices' %}" class="navigation" role="button" style="font-size:12px">Back</a>
+    </div>
+    <br>
+        <form class="text-center" method="POST">
+            {% csrf_token %}
+            <div class="shadow p-3 mb-5 bg-white rounded">
+              <h5>Editing {{selected_invoice_type}} {{Model}}</h5>
+            </div>
+            <div class="shadow p-3 mb-5 bg-white rounded">
+                  {% for field in form %}
+                  <div class="form-group row">
+                      <label for="id_{{field.name}}" class="col-3 col-form-label">{{field.label}}</label>
+                      <div class="col-6">
+                        {{field}}
+                      </div>
+                  </div>
+                  {% endfor %}
+                  {% if selected_invoice_type == "Invoice" %}
+                    <div class="form-group row">
+                      <label for="production" class="col-3 col-form-label">View Orders</label>
+                        <div class="col-6">
+                          <select id="prodcution-list" class="form-control" name="prodcution-list">
+                            {% for option in production_list %}
+                              <option value="{{ option.pk }}">{{ option }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                  {% else %}
+                  {% endif %}
+                  <div class="form-group row">
+                      <label for="option" class="col-3 col-form-label">Document:</label>
+                        <div class="col-6">
+                          {% for option in documents %}
+                            <a href="{{ option.document.url }}">{{ option.invoice }}-documents</a>
+                          {% endfor %}
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="offset-sm-2 col-sm-6">
+                      <button type="submit" class="navigation-create" name="button">Save</button>
+                      <a href="{% url 'delete_in_invoice' Model.pk %}" class="delete-druck">Delete</a>
+                    </div>
+                  </div>
+              </div>
+        </form>
+    </div>
+</div>
+<style>
+</style>
+{% endblock%}

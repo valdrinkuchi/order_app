@@ -1,0 +1,123 @@
+<style>
+    /* .col.company-details{
+        margin-left: auto;
+    }
+    .col.invoice-to{
+        text-align: right;
+    }
+    .col.invoice-details{
+        margin-bottom: 100px;
+    }
+    .table-foot{
+        padding-top: 200px !important;
+    }
+    .col img {
+    width: 40%;
+    height: auto;
+} */
+.main-table{
+    margin-bottom: auto;
+}
+</style>
+<div id="invoice">
+    <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <div class="invoice overflow-auto">
+        <div >
+            <header>
+                <div class="row">
+                    <div class="col-3">
+                            <div class="col">
+                                <img src="/static/fkl.png"/>
+                            </div>
+                    </div>
+                    <div class="col company-details">
+                        <h2 class="name">
+                            <a target="_blank" href="#">
+                            KUCHI GmbH
+                            </a>
+                        </h2>
+                        <div>Foersterweg 12</div>
+                        <div>Erkner, DE</div>
+                        <div>(123) 456-789</div>
+                        <div>info@example.com</div>
+                    </div>
+                    <div class="col invoice-to">
+                        <div class="text-gray-light">INVOICE TO:</div>
+                        <h2 class="to">{{name}}</h2>
+                        <div class="address">{{address}}</div>
+                        <div>{{city}}</div>
+                        <div>{{country}}</div>
+                    </div>
+                    <div class="col invoice-details">
+                        <h1 class="invoice-id">INVOICE {{number}}</h1>
+                        <div class="date">Date of Invoice: {{date}}</div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="row contacts">
+                    
+                </div>
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <div class="main-table">
+                        <thead>
+                            <tr>
+                                <th>ITEM</th>
+                                <th class="text-left">DESCRIPTION</th>
+                                <th class="text-right">AMOUNT</th>
+                                <th class="text-right">PRICE</th>
+                                <th class="text-right">TOTAL</th>
+                            </tr>
+                        </thead>
+                        {% for item in invoices %}
+                        <tbody>
+                            <tr>
+                                <td nowrap class="no"><center>{{ item.name }}</center></td>
+                                <td nowrap class="text-left"><center>
+                                    {{ item.description }}</center>
+                                </td>
+                                <td nowrap class="unit"><center>{{ item.amount }} pcs</center></td>
+                                <td nowrap class="qty"><center>{{ item.price }} €/pcs</center></td>
+                                <td nowrap class="total"><center>{{ item.total }} €</center></td>
+                            </tr>
+                        </tbody>
+                         {% endfor %}
+                    </div>
+                    <br>
+                    <br>
+                    <div class="second-table">
+                        <tfoot class="table-foot">
+                            <tr>
+                                <td nowrap colspan="2"></td>
+                                <td nowrap colspan="2">NETTO</td>
+                                <td>{{ netto }} €</td>
+                            </tr>
+                            <tr>
+                                <td nowrap colspan="2"></td>
+                                <td nowrap colspan="2">TAX 19%</td>
+                                <td>{{ vat }} €</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">TOTAL</td>
+                                <td>{{ gross }} €</td>
+                            </tr>
+                        </tfoot>
+                    </div>
+                </table>
+                <div class="thanks">Thank you for your cooperation!</div>
+                <div class="notices">
+                    <div>NOTICE:</div>
+                    <div class="notice">A notice can be placed here!</div>
+                </div>
+            </main>
+            <footer>
+                Invoice was created on a computer and is valid without the signature and seal.
+            </footer>
+        </div>
+        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
+        <div></div>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% block body %}
+<br>
+  {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+                  {{ message }}
+          </div>
+          {% endfor %}
+  {% endif %}
+<br>
+<div class="shadow p-3 mb-5 bg-white rounded">
+      <div class="shadow p-3 mb-5 bg-white rounded">
+        <form class="form-inline my-2 my-lg-2" method="GET" action="{% url 'select_customer' %}">
+          <input
+              type="number"
+              pattern="[0-9]+"
+              class="form-control mr-sm-2 input"
+              placeholder="Enter Year"
+              aria-label="Search"
+              name='year'
+              value="{{request.GET.year}}">
+          <input
+              class="form-control mr-sm-2 input"
+              placeholder="Search Order"
+              aria-label="Search"
+              name='search'
+              value="{{request.GET.search}}">
+              <select id="customer-list" class="form-control cus" name="customer">
+                {% for option in customers %}
+                  <option value="" disabled selected hidden>Select Customer</option>
+                  <option value="{{ option.pk }}">{{ option }}</option>
+                {% endfor %}
+              </select>
+              <button class="navigation-search" href="#" type="submit"><i class="fa fa-search" style="font-size:18px"></i></button>   
+              <button id="export-csv-button-id" class="navigation-download"style="font-size:12px">CSV</button>
+              <button id="pdf-button-id" class="navigation-download" style="font-size:12px">PDF</button>
+          
+        </form>
+      </div>
+    <br>
+    <div class="shadow p-3 mb-5 bg-white rounded table">
+      <h4>Customer Status</h4>
+      <table class="table table-bordered">
+        <thread>
+            <tr>
+            <th>Customer</th>
+            <th>Order Number</th>
+            <th>Sale Netto</th>
+            <th>Sale VAT</th>
+            <th>Sale Gross</th>
+            <th>Late Delivery</th>
+            <th>Profit</th>
+            <th>Date</th>
+            <th>Invoice</th>
+            <th>Invoice Status</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% for calculations in calculations %}
+                <tr>
+                    <td nowrap>{{calculations.order.customer}}</td>
+                    <td nowrap>{{calculations.order}}</td>
+                    <td nowrap>{{calculations.sale_neto}} €</td>
+                    <td nowrap>{{calculations.sale_vat}} €</td>
+                    <td nowrap>{{calculations.sale_gross}} €</td>
+                    <td nowrap>{{calculations.days_late}} Days</td>
+                    <td nowrap>{{calculations.profit}} €</td>
+                    <td nowrap>{{calculations.production.load_date.year}}</td>
+                    <td nowrap>{% if calculations.production.invoice %}<a href="{% url 'invoice_detail' calculations.production.invoice.pk %}">{{calculations.production.invoice}}</a>{%else%}None{%endif%}</td>
+                    <td nowrap>{% if calculations.production.invoice.closed %}Completed{%else%}Incomplete{%endif%}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+  </div>
+</div>
+<script>
+$("#pdf-button-id").click(function(event) {
+    event.preventDefault();
+    const year = $('input[name="year"]').val();
+    const client = $('#customer-list option:selected').text();
+    window.open("{% url 'export_customer_pdf' %}" + "?year=" + year + '&client=' + client, '_blank');
+});
+$("#export-csv-button-id").click(function(event) {
+    event.preventDefault();
+    const year = $('input[name="year"]').val();
+    const client = $('#customer-list option:selected').text();
+    window.open("{% url 'export_customer_csv' %}" + "?year=" + year + '&client=' + client, '_blank');
+});
+</script>
+<style>
+  @media (max-width: 573px){
+  .form-control.cus{
+    min-width: 170px;
+    width: 170px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+  }
+  }
+  @media (max-width: 779px){
+  .form-control.cus{
+    margin-left: 10px;
+  }
+  }
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+  }
+  @media (max-width: 1100px){
+  
+      /* Force table to not be like tables anymore */
+      table, thead, tbody, th, td, tr { 
+          display: block; 
+      }
+      
+      /* Hide table headers (but not display: none;, for accessibility) */
+      thead tr { 
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+      }
+      
+      tr { border: 1px solid #ccc; }
+      
+      td { 
+          /* Behave  like a "row" */
+          border: none;
+          border-bottom: 1px solid #eee; 
+          position: relative;
+          padding-left: 50%; 
+      }
+      
+      td:before { 
+          /* Now like a table header */
+          position: absolute;
+          /* Top/left values mimic padding */
+          top: 6px;
+          left: 6px;
+          width: 45%; 
+          padding-right: 10px; 
+          white-space: nowrap;
+      }
+  }
+</style>
+{% endblock%}

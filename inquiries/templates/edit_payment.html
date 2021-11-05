@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+<br>
+<br>
+<div class="shadow p-3 mb-5 bg-white rounded">
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
+    <div class="row">
+      <a href="{% url 'display_payments' %}" class="navigation" role="button" style="font-size:12px">Back</a>
+    </div>
+  <br>
+    <form class="text-center" method="POST">
+        {% csrf_token %}
+        <div class="shadow p-3 mb-5 bg-white rounded">
+          <h5>Editing,type:{{info.payment_type}}-{% if info.customer %}{{ info.customer }}{%else%}{{ info.producer }}{%endif%}</h5>
+        </div>
+        <div class="shadow p-3 mb-5 bg-white rounded">
+          <h5>Included Invoices:</h5>
+          {% if info.payment_type == 'Out' %}
+          <ul>
+            {% for instance in out_sel_invoices %}
+            <li>
+              <h6>{{instance.invoice_number}}</h6>
+            </li>
+            {%endfor%}
+          {%endif%}
+          </ul>
+          {% if info.payment_type == 'In' %}
+          <ul>
+            {% for instance in in_sel_invoices %}
+            <li>
+              <h6>{{instance.invoice_number}}</h6>
+            </li>
+            {%endfor%}
+          </ul>
+          {%endif%}
+        </div>
+        <div class="shadow p-3 mb-5 bg-white rounded">
+            {% for field in form %}
+            <div class="form-group row">
+                <label for="id_{{field.name}}" class="col-3 col-form-label">{{field.label}}</label>
+                <div class="col-6">
+                  {{ field}}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="form-group row in_invoices">
+                <label for="in_invoices[]" class="col-3 col-form-label">Incoming Invoices </label>
+                  <div class="col-6">
+                    <select id="in_invoices-list-select2" class="form-control in_invoice" name="in_invoices[]" multiple="multiple">
+                      {% for out_option in out_invoices %}
+                        <option value="{{ out_option.pk }}">{{ out_option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+            </div>
+            <div class="form-group row out_invoices">
+                <label for="out_invoices[]" class="col-3 col-form-label">Outgoing Invoices </label>
+                  <div class="col-6">
+                    <select id="out_invoices-list-select2" class="form-control out_invoice" name="out_invoices[]" multiple="multiple">
+                      {% for in_option in in_invoices %}
+                        <option value="{{ in_option.pk }}">{{ in_option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+            </div>
+            <div class="form-group row">
+              <div class="offset-sm-2 col-sm-6">
+                <button type="submit" class="navigation-create" name="button">Save</button>
+                <a href="{% url 'delete_payment' info.pk %}" class="delete-druck">Delete</a>
+              </div>
+            </div>
+    </form>
+  </div>
+</div>
+  <script>
+    $(document).ready(function() {
+        $('#in_invoices-list-select2').select2({
+          theme: 'bootstrap4'
+        });
+        $('#out_invoices-list-select2').select2({
+          theme: 'bootstrap4'
+        });
+      });
+    
+    $('#id_payment_type.form-control').change(function(){
+      const type = $(this).children("option:selected").val();
+      if (type == 'In'){
+        $('#id_producer.form-control').val('');
+        $('#out_invoices-list-select2').next(".select2-container").val()
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '06');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","none");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        $('#id_producer.form-control').css('opacity', '0.6');
+        $('#id_producer.form-control').css("pointer-events","none");
+        $('#id_customer.form-control').css('opacity', '1');
+        $('#id_customer.form-control').css("pointer-events","auto");
+        }
+      else if (type == 'Out') {
+        $('#id_customer.form-control').val('');
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '0.6');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","none");
+        $('#id_producer.form-control').css('opacity', '1');
+        $('#id_producer.form-control').css("pointer-events","auto");
+        $('#id_customer.form-control').css('opacity', '0.6');
+        $('#id_customer.form-control').css("pointer-events","none");
+        }
+      else if (type == ''){
+        $('#in_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#in_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        $('#out_invoices-list-select2').next(".select2-container").css('opacity', '1');
+        $('#out_invoices-list-select2').next(".select2-container").css("pointer-events","auto");
+        $('#id_producer.form-control').css('opacity', '1');
+        $('#id_producer.form-control').css("pointer-events","auto");
+        $('#id_customer.form-control').css('opacity', '1');
+        $('#id_customer.form-control').css("pointer-events","auto");
+        }
+    });
+    $(document).ready(function() {
+        $('#id_payment_type.form-control').hide();
+        $('label[for="id_payment_type"]').hide();
+      const type = $('#id_payment_type.form-control').children("option:selected").val();
+      if (type == 'In'){
+        $('.form-group.row.in_invoices').hide();
+        $('#id_producer.form-control').css('opacity', '0.6');
+        $('#id_producer.form-control').css("pointer-events","none");
+        $('#id_customer.form-control').css('opacity', '1');
+        $('#id_customer.form-control').css("pointer-events","auto");
+      }
+      else if(type == 'Out'){
+        $('.form-group.row.out_invoices').hide();
+        $('#id_producer.form-control').css('opacity', '1');
+        $('#id_producer.form-control').css("pointer-events","auto");
+        $('#id_customer.form-control').css('opacity', '0.6');
+        $('#id_customer.form-control').css("pointer-events","none");
+      }
+      else if (type == ''){
+        $('.form-group.row.out_invoices').show();
+        $('#id_producer.form-control').css('opacity', '1');
+        $('#id_producer.form-control').css("pointer-events","auto");
+        $('#id_customer.form-control').css('opacity', '1');
+        $('#id_customer.form-control').css("pointer-events","auto");
+        }
+    });
+  </script>
+{% endblock%}

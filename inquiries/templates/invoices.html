@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block body %}
+<br>
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
+<br>
+<div class="shadow p-3 mb-5 bg-white rounded">
+  <div class="shadow p-3 mb-5 bg-white rounded">
+    <form class="form-inline my-2 my-lg-2" method="GET" action="{% url 'display_invoices' %}">
+      <input
+          type="number"
+          pattern="[0-9]+"
+          class="form-control mr-sm-2 input-name"
+          placeholder="Invoice Number"
+          aria-label="Search"
+          name='number'
+          value="{{request.GET.number}}">
+      <input
+          class="form-control mr-sm-2 input-name"
+          placeholder="Name of the Client"
+          aria-label="Search"
+          name='client'
+          pattern="[A-Za-z ]+"
+          value="{{request.GET.client}}">
+        <input
+          pattern="[A-Za-z ]+"
+          class="form-control mr-sm-2 input"
+          placeholder="Invoice Type"
+          aria-label="Search"
+          name='type'
+          value="{{request.GET.type}}">
+        <input
+          type="number"
+          pattern="[0-9]+"
+          class="form-control mr-sm-2 year input"
+          placeholder="Invoice Year"
+          aria-label="Search"
+          name='year'
+          value="{{request.GET.year}}">
+      <button class="navigation-search" href="#" type="submit"><i class="fa fa-search" style="font-size:18px"></i></button>
+      <a href="{% url 'add_invoice' %}" class="navigation-add" role="button" style="font-size:12px">Create</a>
+    </form>
+  </div>
+  <br>
+  <div class="shadow p-3 mb-5 bg-white rounded">
+    <table class="table table-hover">
+      <h4>Sent Invoices</h4>
+          <thread>
+              <tr>
+                <th>Number</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Payment</th>
+              </tr>
+          </thread>
+          <tbody>
+
+            {% for invoices in invoices %}
+              <tr>
+                <td nowrap><a href="{% url 'invoice_detail' invoices.pk %}">{{ invoices.invoice_number }}</a></td>
+                <td nowrap>{{ invoices.invoice_date }}</td>
+                <td nowrap>{% if invoices.customer %}{{ invoices.customer }}{%else%}{{ invoices.producer }}{%endif%}</td>
+                <td nowrap>{{ invoices.invoice_type }}</td>
+                <td nowrap>{% if invoices.cancelled %} Cancelled {% else %} Valid {% endif %}</td>
+                <td nowrap>{% if invoices.closed %} Completed {% else %} Incomplete {% endif %}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+  </div>
+</div>
+<style>
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+  }
+  @media (max-width: 779px){
+  
+      /* Force table to not be like tables anymore */
+      table, thead, tbody, th, td, tr { 
+          display: block; 
+      }
+      
+      /* Hide table headers (but not display: none;, for accessibility) */
+      thead tr { 
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+      }
+      
+      tr { border: 1px solid #ccc; }
+      
+      td { 
+          /* Behave  like a "row" */
+          border: none;
+          border-bottom: 1px solid #eee; 
+          position: relative;
+          padding-left: 50%; 
+      }
+      
+      td:before { 
+          /* Now like a table header */
+          position: absolute;
+          /* Top/left values mimic padding */
+          top: 6px;
+          left: 6px;
+          width: 45%; 
+          padding-right: 10px; 
+          white-space: nowrap;
+      }
+  }
+</style>
+{% endblock %}

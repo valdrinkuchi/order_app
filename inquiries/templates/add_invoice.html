@@ -1,0 +1,419 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block body %}
+<br>
+<br>
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
+    <div class="shadow p-3 mb-5 bg-white rounded">
+    <div class="row">
+      <a href="{% url 'display_invoices' %}" class="navigation" role="button" style="font-size:12px">Back</a>
+    </div>
+    <br>
+            <form class="text-center" method="POST" action="{% url 'add_invoice' %}">
+                {% csrf_token %}
+                <div class="shadow p-3 mb-5 bg-white rounded">
+                  <h5>Adding Invoice</h5>
+                </div>
+                <div class="shadow p-3 mb-5 bg-white rounded">
+                          <div class="form-group row productions">
+                            <label for="productions[]" class="col-3 col-form-label">Order Number</label>
+                              <div class="col-6 productions">
+                                <select id="production-list-select2" name="productions[]" multiple="multiple">
+                                  {% for option in production_list %}
+                                    <option class="" value="{{ option.pk }}">{{ option }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                          </div>
+                          {% for field in form %}
+                            <div class="form-group row">
+                                <label for="id_{{field.name}}" class="col-3 col-form-label">{{field.label}}</label>
+                                <div class="col-6">
+                                  {{field|attr:"class:form-control"}}
+                                </div>
+                            </div>
+                          {% endfor %}
+                          <div class="form-group row">
+                            <label for="producers" class="col-3 col-form-label">Producer</label>
+                              <div class="col-6">
+                                <select id="producer-list" class="form-control" name="producer">
+                                  {% for option in producers_list %}
+                                    <option value="" disabled selected hidden>Select Producer</option>
+                                    <option value="{{ option.pk }}">{{ option }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                              <div class="col-1">
+                                <button id="reset_options_producer" class="btn btn-danger btn-circle" name="button">X</button>
+                              </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="customers" class="col-3 col-form-label">Customer</label>
+                              <div class="col-6">
+                                <select id="customer-list" class="form-control" name="customer">
+                                  {% for option in customers_list %}
+                                    <option value="" disabled selected hidden>Select Customer</option>
+                                    <option value="{{ option.pk }}">{{ option }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                              <div class="col-1">
+                                <button id="reset_options_customer" class="btn btn-danger btn-circle" name="button">X</button>
+                              </div>
+                          </div>
+                          <div id="items">
+                                <div class="form-group row">
+                                    <label for="name" class="col-3 col-form-label">1.Item Name</label>
+                                    <div class="col-6">
+                                      <input
+                                        id="name"
+                                        type="text"
+                                        class="form-control mr-sm-2"
+                                        placeholder="Enter Item"
+                                        aria-label="Name"
+                                        name='name[]'>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="description" class="col-3 col-form-label">1.Item Description</label>
+                                  <div class="col-6">
+                                    <input
+                                      id="description"
+                                      type="text"
+                                      class="form-control mr-sm-2"
+                                      placeholder="Enter Description"
+                                      aria-label="Description"
+                                      name='description[]'>
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="price" class="col-3 col-form-label">1.Price</label>
+                                    <div class="col-6">
+                                      <input
+                                        id="price"
+                                        type="number"
+                                        step="0.01"
+                                        pattern="[0-9]+"
+                                        min="0"
+                                        class="form-control mr-sm-2"
+                                        placeholder="Item Price"
+                                        aria-label="Price"
+                                        name='price[]'>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="amount" class="col-3 col-form-label">1.Amount</label>
+                                    <div class="col-6">
+                                      <input
+                                        id="amount"
+                                        type="number"
+                                        min="0"
+                                        pattern="[0-9]+"
+                                        class="form-control mr-sm-2"
+                                        placeholder="Item Amount"
+                                        aria-label="Amount"
+                                        name='amount[]'>
+                                    </div>
+                                </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="offset-sm-2 col-sm-6">
+                              <button type="submit" class="navigation-create" name="button">Save</button>
+                              <a id="add_item" class="add-item" role="button" style="color:white">+ Item</a>
+                              <a id="delete" class="delete-druck" role="button" style="color:white">Delete</a>
+                            </div>
+                          </div>
+                      
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+  $(document).ready(function() {
+      $('#production-list-select2').select2({
+        theme: 'bootstrap4',
+      });
+    });
+    var counter = 2;
+    $(document).ready(function(){
+      $("#add_item").click(function(){
+        $('#delete').show();
+      });
+    });
+    $('#id_invoice_type').change(function(){
+      const type = $(this).children("option:selected").val();
+      if (type == 'Invoice'){
+        $('#add_customer').css('opacity', '0.6');
+        $('#add_customer').css("pointer-events","none");
+        $('#add_producer').css('opacity', '0.6');
+        $('#add_producer').css("pointer-events","none");
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('label[for="producers"]').hide();
+        $('#producer-list').hide();
+        $('label[for="customers"]').hide();
+        $('#customer-list').hide();
+        $('#add_item').hide();
+        $('#name').hide();
+        $('label[for="name"]').hide();
+        $('#description').hide();
+        $('label[for="description"]').hide();
+        $('#amount').hide();
+        $('label[for="amount"]').hide();
+        $('#price').hide();
+        $('label[for="price"]').hide();
+        $('div.form-group.row.productions').show();
+        $('label[for="productions[]"]').show();
+        $('#production-list-select2').next(".select2-container").show();
+      }
+      else if (type == 'Reklamation') {
+          $('#reset_options_producer').hide();
+          $('#reset_options_customer').hide();
+          $('#add_customer').css('opacity', '0.6');
+          $('#add_customer').css("pointer-events","none");
+          $('#add_producer').css('opacity', '1');
+          $('#add_producer').css("pointer-events","auto");
+          $('label[for="producers"]').show();
+          $('#producer-list').show();
+          $('label[for="customers"]').hide();
+          $('#customer-list').hide();
+          $('#add_item').show();
+          $('#name').show();
+          $('label[for="name"]').show();
+          $('#description').show();
+          $('label[for="description"]').show();
+          $('#amount').show();
+          $('label[for="amount"]').show();
+          $('#price').show();
+          $('label[for="price"]').show();
+          $('div.form-group.row.productions').hide();
+          $('label[for="productions[]"]').hide();
+          $('#production-list-select2').next(".select2-container").hide();
+      }
+      else {
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('#add_customer').css('opacity', '1');
+        $('#add_customer').css("pointer-events","auto");
+        $('#add_producer').css('opacity', '1');
+        $('#add_producer').css("pointer-events","auto");
+        $('label[for="producers"]').show();
+        $('#producer-list').show();
+        $('label[for="customers"]').show();
+        $('#customer-list').show();
+        $('#add_item').show();
+        $('#name').show();
+        $('label[for="name"]').show();
+        $('#description').show();
+        $('label[for="description"]').show();
+        $('#amount').show();
+        $('label[for="amount"]').show();
+        $('#price').show();
+        $('label[for="price"]').show();
+        $('div.form-group.row.productions').hide();
+        $('label[for="productions[]"]').hide();
+        $('#production-list-select2').next(".select2-container").hide();
+      }
+    });
+
+    $(document).ready(function() {
+      const type = $('#id_invoice_type').children("option:selected").val();
+      if (type == 'Invoice'){
+        $('#add_customer').css('opacity', '0.6');
+        $('#add_customer').css("pointer-events","none");
+        $('#add_producer').css('opacity', '0.6');
+        $('#add_producer').css("pointer-events","none");
+        $('#reset_options_producer').hide();
+        $('#reset_options_customer').hide();
+        $('label[for="producers"]').hide();
+        $('#producer-list').hide();
+        $('label[for="customers"]').hide();
+        $('#customer-list').hide();
+        $('#add_item').hide();
+        $('#name').hide();
+        $('label[for="name"]').hide();
+        $('#description').hide();
+        $('label[for="description"]').hide();
+        $('#amount').hide();
+        $('label[for="amount"]').hide();
+        $('#price').hide();
+        $('label[for="price"]').hide();
+        $('div.form-group.row.productions').show();
+        $('label[for="productions[]"]').show();
+        $('#production-list-select2').next(".select2-container").show();
+      }
+      else if (type == 'Reklamation') {
+          $('#reset_options_producer').show();
+          $('#reset_options_customer').hide();
+          $('#id_producer').show();
+          $('label[for="id_producer"]').show();
+          $('#add_item').show();
+          $('#name').show();
+          $('label[for="name"]').show();
+          $('#description').show();
+          $('label[for="description"]').show();
+          $('#amount').show();
+          $('label[for="amount"]').show();
+          $('#price').show();
+          $('label[for="price"]').show();
+          $('label[for="producers"]').show();
+          $('#producer-list').show();
+          $('label[for="customers"]').hide();
+          $('#customer-list').hide();
+          $('div.form-group.row.productions').hide();
+          $('label[for="productions[]"]').hide();
+          $('#production-list-select2').next(".select2-container").hide(); 
+      }
+      else {
+        $('#id_customer').show();
+        $('#id_producer').show();
+        $('label[for="id_customer"]').show();
+        $('label[for="id_producer"]').show();
+        $('#add_item').show();
+        $('#name').show();
+        $('label[for="name"]').show();
+        $('#description').show();
+        $('label[for="description"]').show();
+        $('#amount').show();
+        $('label[for="amount"]').show();
+        $('#price').show();
+        $('label[for="price"]').show();
+        $('label[for="producers"]').hide();
+        $('#producer-list').hide();
+        $('label[for="customers"]').show();
+        $('#customer-list').show();
+        $('div.form-group.row.productions').hide();
+        $('label[for="productions[]"]').hide();
+        $('#production-list-select2').next(".select2-container").hide();
+      }
+    });
+
+    $('#customer-list').change(function(){
+      $('#producer-list').css('opacity', '0.6');
+      $('#producer-list').css("pointer-events","none");
+      $('#reset_options_customer').show();
+    });
+    $('#producer-list').change(function(){
+      $('#customer-list').css('opacity', '0.6');
+      $('#customer-list').css("pointer-events","none");
+      $('#reset_options_producer').show();
+    });
+    $('#reset_options_customer').click(function(){
+      event.preventDefault()
+      $('#customer-list').val('');
+      $('#customer-list').css('opacity', '1');
+      $('#customer-list').css("pointer-events","auto");
+      $('#producer-list').css('opacity', '1');
+      $('#producer-list').css("pointer-events","auto");
+      $('#reset_options_customer').hide();
+    });
+    $('#reset_options_producer').click(function(){
+      event.preventDefault()
+      $('#producer-list').val('');
+      $('#customer-list').css('opacity', '1');
+      $('#customer-list').css("pointer-events","auto");
+      $('#producer-list').css('opacity', '1');
+      $('#producer-list').css("pointer-events","auto");
+      $('#reset_options_producer').hide();
+    });
+    $(document).ready(function() {
+      $('#reset_options_producer').hide();
+      $('#reset_options_customer').hide();
+    });
+    $(document).ready(function() {
+      const producer = $('#producer-list').children("option:selected").val();
+      if (producer !== ''){
+        $('#reset_options_producer').show();
+      }
+      if (producer == null){
+        $('#reset_options_producer').hide();
+      }
+    });
+    $(document).ready(function() {
+      const customer = $('#customer-list').children("option:selected").val();
+      if (customer !== ''){
+        $('#reset_options_customer').show();
+      }
+      if (customer == null){
+        $('#reset_options_customer').hide();
+      }
+    });
+
+    $(document).ready(function() {
+      if (counter == 2){
+        $('#delete').hide();
+        $('#id_invoice_type').css('opacity', '1');
+        $('#id_invoice_type').css("pointer-events","auto");
+      }
+    });
+    $(document).ready(function() {
+      
+      $('#add_item').click(function(e){
+        $('#id_invoice_type').css('opacity', '0.6');
+        $('#id_invoice_type').css("pointer-events","none");
+        event.preventDefault()
+        
+        $('#items').append('<legend id="legend_'+ counter + '" class="border-bottom mb-4"></legend>' +
+                          '<div class="form-group row name_'+ counter + '">' + 
+                          '<label for="name" id="name_label_'+ counter + '" class="col-3 col-form-label">'+ counter + '.Item Name</label>' + 
+                          '<div class="col-6 name_'+ counter + '"><input id="name_'+ counter + '" type="text" class="form-control mr-sm-2" placeholder="Enter Item" aria-label="Name"name="name[]" required> </div>');
+        $('#items').append('<div class="form-group row description_'+ counter + '">' + 
+                          '<label for="description" id="description_label_'+ counter + '" class="col-3 col-form-label">'+ counter + '.Item Description</label>' + 
+                          '<div class="col-6 description_'+ counter + '"><input id="description_'+ counter + '" type="text" class="form-control mr-sm-2" placeholder="Enter Description" aria-label="Description"name="description[]" required> </div>');
+        $('#items').append('<div class="form-group row price_'+ counter + '">' + 
+                          '<label for="price" id="price_label_'+ counter + '" class="col-3 col-form-label">'+ counter + '.Price</label>' + 
+                          '<div class="col-6 price_'+ counter + '"><input id="price_'+ counter + '" type="number" step="0.01" pattern="[0-9]+" class="form-control mr-sm-2" placeholder="Item Price" aria-label="Price"name="price[]" required> </div>');
+        $('#items').append('<div class="form-group row amount_'+ counter + '">' + 
+                          '<label for="amount" id="amount_label_'+ counter + '" class="col-3 col-form-label">'+ counter + '.Amount</label>' + 
+                          '<div class="col-6 amount_'+ counter + '"><input id="amount_'+ counter + '" type="number" pattern="[0-9]+" class="form-control mr-sm-2" placeholder="Item Amount" aria-label="Amount"name="amount[]" required> </div>');
+      counter++;  
+      });
+    });
+    
+    $(document).on('click','#delete',function(e){
+
+        if (counter > 2){
+          $("div.form-group.row.name_"+ counter).remove();
+          $("div.form-group.row.description_"+ counter).remove();
+          $("div.form-group.row.price_"+ counter).remove();
+          $("div.form-group.row.amount_"+ counter).remove();
+          $('div.col-3.name_'+ counter).remove();
+          $('div.col-3.price_'+ counter).remove();
+          $('div.col-3.amount_'+ counter).remove();
+          $('#legend_'+ counter).remove();
+          $('#name_label_'+ counter).remove();
+          $('#price_label_'+ counter).remove();
+          $('#amount_label_'+ counter).remove();
+          $('#name_'+ counter).remove();
+          $('#price_'+ counter).remove();
+          $('#amount_'+ counter).remove();
+          counter --;
+          $("div.form-group.row.name_"+ counter).remove();
+          $("div.form-group.row.description_"+ counter).remove();
+          $("div.form-group.row.price_"+ counter).remove();
+          $("div.form-group.row.amount_"+ counter).remove();
+          $('div.col-3.name_'+ counter).remove();
+          $('div.col-3.price_'+ counter).remove();
+          $('div.col-3.amount_'+ counter).remove();
+          $('#legend_'+ counter).remove();
+          $('#name_label_'+ counter).remove();
+          $('#price_label_'+ counter).remove();
+          $('#amount_label_'+ counter).remove();
+          $('#name_'+ counter).remove();
+          $('#price_'+ counter).remove();
+          $('#amount_'+ counter).remove();
+          if (counter == 2){
+            $('#delete').hide();
+            $('#id_invoice_type').css('opacity', '1');
+            $('#id_invoice_type').css("pointer-events","auto");
+            }
+          }
+      });
+</script>
+{% endblock%}

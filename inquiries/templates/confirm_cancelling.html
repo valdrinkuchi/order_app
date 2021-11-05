@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br>
+<br>
+  <div class="card shadow p-3 mb-5 bg-white rounded">
+    <form method="POST">
+
+        {% csrf_token %}
+        <div class="card shadow p-3 mb-5 bg-white rounded second">
+          Cancelling "{{Model}}"
+        </div>
+        <h4>Are you sure you want to cancel this Invoice?</h4>
+        <button class="delete-druck" type="submit">Yes Cancel!</button>
+        <a class="navigation" href="{% url 'display_invoices'  %}">Abort</a>
+    </form>
+  </div>
+<style>
+  .card.shadow.p-3.mb-5.bg-white.rounded {
+    min-width: 425px;
+  }
+  .card.shadow.p-3.mb-5.bg-white.rounded.second{
+    min-width: 350px;
+    max-width: auto;
+  } 
+</style>
+{% endblock%}

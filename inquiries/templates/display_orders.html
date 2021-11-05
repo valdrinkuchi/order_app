@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br>
+{% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+        </div>
+        {% endfor %}
+{% endif %}
+<br>
+<div class="shadow p-3 mb-5 bg-white rounded display">
+      <div class="shadow p-3 mb-5 bg-white rounded">
+        <form class="form-inline my-2 my-lg-2" method="GET" action="{% url 'display_orders' %}">
+          <input
+              type="number"
+              pattern="[0-9]+"
+              class="form-control mr-sm-2 input"
+              placeholder="Enter Year"
+              aria-label="Search"
+              name='year'
+              value="{{request.GET.year}}">
+          <input
+              class="form-control mr-sm-2 input-name"
+              placeholder="Name of the Client"
+              aria-label="Search"
+              name='client'
+              pattern="[A-Za-z ]+"
+              value="{{request.GET.client}}">
+          <input
+              class="form-control mr-sm-2 input"
+              placeholder="Search Order"
+              aria-label="Search"
+              name='search'
+              value="{{request.GET.search}}">
+            <button class="navigation-search" href="#" type="submit"><i class="fa fa-search" style="font-size:18px"></i></button>
+          <a href="{% url 'add_orders' %}" class="navigation-add" role="button" style="font-size:12px">Create</a>
+        </form>
+      </div> 
+  <br>
+  <div class="shadow p-3 mb-5 bg-white rounded">
+      <h4>{{ header }}</h4>
+      <table class="table table-hover">
+        <thread>
+            <tr>
+              <th>Order Number</th>
+              <th>Article</th>
+              <th>Price</th>
+              <th>Order Due Date</th>
+              <th>Customer</th>
+            </tr>
+        </thread>
+        <tbody>
+          {% for Orders in orders %}
+          <tr>
+            <td>{% if user.is_authenticated %}<a href="{% url 'edit_orders' Orders.pk %}">{{Orders.order_number }}</a>{% else %} {{Orders.order_number }} {% endif %}</td>
+            <td>{{ Orders.article }}</td>
+            <td>{{ Orders.price }} €</td>
+            <td>{{ Orders.order_due_date }}</td>
+            <td>{{ Orders.customer }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
+</div>
+<style>
+ @media (max-width: 610px) {
+  table, thead, tbody, th, td, tr { 
+          display: block; 
+      }
+      
+      /* Hide table headers (but not display: none;, for accessibility) */
+      thead tr { 
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+      }
+      
+      tr { border: 1px solid #ccc; }
+      
+      td { 
+          /* Behave  like a "row" */
+          border: none;
+          border-bottom: 1px solid #eee; 
+          position: relative;
+          padding-left: 50%; 
+      }
+      
+      td:before { 
+          /* Now like a table header */
+          position: absolute;
+          /* Top/left values mimic padding */
+          top: 6px;
+          left: 6px;
+          width: 45%; 
+          padding-right: 10px; 
+          white-space: nowrap;
+      }
+  }
+
+</style>
+{% endblock %}

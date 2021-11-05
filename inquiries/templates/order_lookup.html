@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br>
+{% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+        </div>
+        {% endfor %}
+{% endif %}
+  <br>
+<div class="shadow p-3 mb-5 bg-white rounded-lookup">
+  <div class="container">
+    <h4>Search Results</h4>
+      <table class="table table-hover-lookup">
+        <thread>
+            <tr>
+              <th>Number</th>
+              <th>Article</th>
+              <th>Price</th>
+              <th>Due Date</th>
+              <th>Load Date</th>
+              <th>Customer</th>
+              <th>Producer</th>
+            </tr>
+        </thread>
+        <tbody>
+          {% for search in search %}
+          <tr>
+            <td><a href="{% url 'edit_orders' search.order.pk %}">{{ search.order.order_number }}</a></td>
+            <td>{{ search.order.article }}</td>
+            <td>{{ search.order.price }} €</td>
+            <td>{{ search.order.order_due_date }}</td>
+            <td>{{ search.load_date }}</td>
+            <td>{{ search.order.customer }}</td>
+            <th>{{ search.producer}}</th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
+</div>
+<style>
+  .table.table-hover-lookup{
+    width: 85%;
+    
+  }
+  .rounded-lookup{
+    width: 90%;
+  }
+</style>
+{% endblock %}
+

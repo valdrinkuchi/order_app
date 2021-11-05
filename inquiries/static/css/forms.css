@@ -1,0 +1,29 @@
+
+
+.form-control.mr-sm-2.input {
+    min-width: auto;
+    max-width: auto;
+    margin: 10px;
+    padding: auto;
+      }
+      
+
+.form-control.mr-sm-2.input-name{
+  min-width: auto;
+  max-width: auto;
+  margin: 10px;
+  padding: auto;
+}
+.shadow.p-3.mb-5.bg-white.rounded{
+  min-width: auto;
+  max-width: auto;
+  min-height: auto;
+  max-height: auto;
+}
+.shadow.p-3.mb-5.bg-white.rounded-table{
+  min-width: auto;
+  max-width: auto;
+  min-height: auto;
+  max-height: auto;
+  margin-right: 50px;
+}

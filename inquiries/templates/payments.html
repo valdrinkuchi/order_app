@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br>
+{% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+        </div>
+        {% endfor %}
+{% endif %}
+<br>
+<div class="shadow p-3 mb-5 bg-white rounded">
+  <div class="shadow p-3 mb-5 bg-white rounded">
+      <form class="form-inline my-2 my-lg-2" method="GET" action="{% url 'display_payments' %}">
+        <input
+            type="number"
+            pattern="[0-9]+"
+            class="form-control mr-sm-2 input"
+            placeholder="Enter Year"
+            aria-label="Search"
+            name='year'
+            value="{{request.GET.year}}">
+        <input
+            class="form-control mr-sm-2 input-name"
+            placeholder="Sender/Reciever"
+            aria-label="Search"
+            name='client'
+            pattern="[A-Za-z ]+"
+            value="{{request.GET.client}}">
+        <input
+            class="form-control mr-sm-2 input-name"
+            placeholder="Type of Payment"
+            aria-label="Search"
+            name='type'
+            pattern="[A-Za-z ]+"
+            value="{{request.GET.type}}">
+            <button class="navigation-search" href="#" type="submit"><i class="fa fa-search" style="font-size:18px"></i></button>
+            <a href="{% url 'add_payment' %}" class="navigation-add" role="button" style="font-size:12px">Create</a>
+      </form>
+    </div>
+    <div class="shadow p-3 mb-5 bg-white rounded">
+      <h4>Payments</h4>
+      <table class="table table-hover">
+        <thread>
+            <tr>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Sender</th>
+              <th>Type</th>
+            </tr>
+        </thread>
+        <tbody>
+          {% for payments in payments %}
+          <tr>
+              <td><a href="{% url 'edit_payment' payments.pk %}"> {{ payments.amount }} € </a></td>
+              <td>{{ payments.date }}</td>
+              <td nowrap>{% if payments.customer %}{{ payments.customer }}{%else%}{{ payments.producer }}{%endif%}</td>
+              <td>{{ payments.payment_type }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+{% endblock %}

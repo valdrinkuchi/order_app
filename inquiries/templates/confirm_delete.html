@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br>
+<br>
+  <div class="card shadow p-3 mb-5 bg-white rounded">
+    <form method="POST">
+
+        {% csrf_token %}
+        <div class="card shadow p-3 mb-5 bg-white rounded second">
+          Deleting "{{Model}}"
+        </div>
+        <br>
+        <h4>Are you sure you want to delete this Instance?</h4>
+        <button class="delete-druck" type="submit">Yes Delete!</button>
+        <a class="navigation" href="{% url template %}">Cancel</a>
+    </form>
+  </div>
+<style>
+    .card.shadow.p-3.mb-5.bg-white.rounded {
+      min-width: 425px;
+    }
+    .card.shadow.p-3.mb-5.bg-white.rounded.second{
+      min-width: 350px;
+      max-width: auto;
+    } 
+</style>
+{% endblock%}
