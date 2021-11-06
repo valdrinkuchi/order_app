@@ -15,6 +15,7 @@ WORKDIR /app
 COPY ./scripts /scripts
 RUN apk --update add bash && \
     apk add dos2unix
+RUN apk add nano
 
 # RUN dos2unix /scripts/entrypoint.sh
 

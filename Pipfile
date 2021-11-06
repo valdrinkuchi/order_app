@@ -12,6 +12,7 @@ django-crispy-forms = "*"
 django-widget-tweaks = "*"
 django-bootstrap4 = "*"
 pdbpp = "*"
+uwsgi = "*"
 
 [dev-packages]
 

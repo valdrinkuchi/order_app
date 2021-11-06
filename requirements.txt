@@ -21,6 +21,7 @@ reportlab==3.6.2
 six==1.16.0
 soupsieve==2.3
 sqlparse==0.4.2
+uWSGI==2.0.20
 webencodings==0.5.1
 wmctrl==0.4
 xhtml2pdf==0.2.5
